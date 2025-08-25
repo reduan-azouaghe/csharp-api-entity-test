@@ -27,6 +27,12 @@ public class Seeder
     private List<Patient> _patients = [];
     private List<Doctor> _doctors = [];
     private List<Appointment> _appointments = [];
+    private List<Medicine> _medicines =
+    [
+        new() { Id = 1, Name = "Amoxicillin", Description = "Antibiotic" },
+        new() { Id = 2, Name = "Ibuprofen 400mg", Description = "NSAID" },
+        new() { Id = 3, Name = "Lisinopril 10mg", Description = "ACE inhibitor" }
+    ];
 
     public Seeder()
     {
@@ -39,10 +45,10 @@ public class Seeder
                 Id = i,
                 FullName = $"{_firstNames[random.Next(_firstNames.Count)]} {_lastNames[random.Next(_lastNames.Count)]}"
             };
-            
+
             _patients.Add(p);
         }
-        
+
         for (int i = 1; i < 4; i++)
         {
             Doctor d = new Doctor()
@@ -50,26 +56,27 @@ public class Seeder
                 Id = i,
                 FullName = $"{_firstNames[random.Next(_firstNames.Count)]} {_lastNames[random.Next(_lastNames.Count)]}"
             };
-            
+
             _doctors.Add(d);
         }
-        
+
         for (int i = 1; i < _patients.Count; i++)
         {
             int rngPatient = random.Next(_patients.Count);
             int rngDoc = random.Next(_doctors.Count);
-            
+
             _appointments.Add(new Appointment
             {
+                AppointmentId = i,
                 PatientId = _patients[rngPatient].Id,
                 DoctorId = _doctors[rngDoc].Id,
                 AppointmentDate = DateTime.UtcNow.AddDays(random.Next(1, 30)),
             });
-            
         }
     }
-    
+
     public List<Patient> Patients => _patients;
     public List<Doctor> Doctors => _doctors;
     public List<Appointment> Appointments => _appointments;
+    public List<Medicine> Medicines => _medicines;
 }

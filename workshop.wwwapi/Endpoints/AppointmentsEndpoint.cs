@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using workshop.wwwapi.DTOs;
 using workshop.wwwapi.Repository;
 
 namespace workshop.wwwapi.Endpoints;
@@ -23,6 +24,12 @@ public static class AppointmentsEndpoint
             .WithName("GetAppointmentsByDoctor")
             .WithSummary("Get all appointments by doctor ID.")
             .WithDescription("Retrieves all appointments from hospital data base concerning doctor with doctor ID.");
+
+        group.MapPut("/", CreateAppointment)
+            .WithName("CreateAppointment")
+            .WithSummary("Create a new appointment.")
+            .WithDescription("Creates a new appointment in the hospital data base.")
+            .Accepts<NewAppointmentDto>("application/json");
     }
     
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -30,9 +37,18 @@ public static class AppointmentsEndpoint
     { 
         return TypedResults.Ok(await repository.GetAppointments());
     }
+    
     [ProducesResponseType(StatusCodes.Status200OK)]
     private static async Task<IResult> GetAppointmentsByDoctor (IRepository repository, int id)
     { 
         return TypedResults.Ok(await repository.GetAppointmentsByDoctor(id));
+    }
+    
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    private static async Task<IResult> CreateAppointment(IRepository repository, NewAppointmentDto dto)
+    {
+        var appointment = await repository.CreateAppointment(dto);
+        return appointment != null ? TypedResults.Ok(appointment) : TypedResults.NotFound();
     }
 }

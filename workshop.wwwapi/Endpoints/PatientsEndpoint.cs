@@ -5,7 +5,6 @@ namespace workshop.wwwapi.Endpoints;
 
 public static class PatientsEndpoint
 {
-    //TODO:  add additional endpoints in here according to the requirements in the README.md 
     public static void ConfigurePatientsEndpoint(this IEndpointRouteBuilder routes)
     {
         var group = routes
@@ -37,6 +36,6 @@ public static class PatientsEndpoint
     private static async Task<IResult> GetPatient(IRepository repository, int id)
     {
         var entity = await repository.GetPatient(id);
-        return entity == null ? TypedResults.NotFound($"No patient with {id} found") : TypedResults.NotFound(entity);
+        return entity == null ? TypedResults.NotFound($"No patient with {id} found") : TypedResults.Ok(entity);
     }
 }

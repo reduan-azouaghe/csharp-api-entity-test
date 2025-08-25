@@ -36,6 +36,6 @@ public static class DoctorsEndpoint
     private static async Task<IResult> GetDoctor(IRepository repository, int id)
     {
         var entity = await repository.GetDoctor(id);
-        return entity == null ? TypedResults.NotFound($"No patient with {id} found") : TypedResults.NotFound(entity);
+        return entity == null ? TypedResults.NotFound($"No patient with {id} found") : TypedResults.Ok(entity);
     }
 }

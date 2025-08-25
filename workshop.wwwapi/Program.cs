@@ -19,6 +19,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+if (!app.Configuration.GetValue("DisableHttpsRedirection", false))
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseHttpsRedirection();
 app.ConfigurePatientsEndpoint();
 app.ConfigureDoctorsEndpoint();

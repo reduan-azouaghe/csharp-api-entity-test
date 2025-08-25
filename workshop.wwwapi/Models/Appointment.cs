@@ -7,6 +7,9 @@ namespace workshop.wwwapi.Models;
 [Table("Appointment")]
 public class Appointment
 {
+    [Key]
+    public int AppointmentId { get; set; }
+    
     [Column("doctor_fk")]
     [Required]
     public int DoctorId { get; set; }
@@ -23,4 +26,9 @@ public class Appointment
     [Column("booking_time")]
     [Required]
     public DateTime AppointmentDate { get; set; }
+    
+    [Column("prescriptions")]
+    [JsonIgnore]
+    public virtual ICollection<Prescription> Prescriptions { get; set; } = new List<Prescription>();
+    
 }

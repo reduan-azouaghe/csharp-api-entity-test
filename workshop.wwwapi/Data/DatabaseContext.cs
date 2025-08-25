@@ -20,53 +20,28 @@ namespace workshop.wwwapi.Data
             Seeder seed = new Seeder();
 
             // Define structure
-            modelBuilder.Entity<Appointment>()
-                .HasKey(a => a.AppointmentId);
+            modelBuilder.Entity<Doctor>()
+                .HasMany(d => d.Appointments)
+                .WithOne(a => a.Doctor)
+                .HasForeignKey(a => a.DoctorId)
+                .OnDelete(DeleteBehavior.Cascade);
             
-            // Define composite primary key for PrescriptionMedicine
+            modelBuilder.Entity<Patient>()
+                .HasMany(p => p.Appointments)
+                .WithOne(a => a.Patient)
+                .HasForeignKey(a => a.PatientId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<PrescriptionMedicine>()
                 .HasKey(pm => new { pm.PrescriptionId, pm.MedicineId });
-            
-            // PrescriptionMedicine -> prescription (many-to-one)
             modelBuilder.Entity<PrescriptionMedicine>()
                 .HasOne(pm => pm.Prescription)
                 .WithMany(p => p.Items)
-                .HasForeignKey(pm => pm.PrescriptionId)
-                .OnDelete(DeleteBehavior.Cascade);
-            
-            // PrescriptionMedicine -> medicine (many-to-one)
+                .HasForeignKey(pm => pm.PrescriptionId);
             modelBuilder.Entity<PrescriptionMedicine>()
                 .HasOne(pm => pm.Medicine)
                 .WithMany(m => m.Prescriptions)
-                .HasForeignKey(pm => pm.MedicineId)
-                .OnDelete(DeleteBehavior.Cascade);
-            
-            // Medicine
-            modelBuilder.Entity<Medicine>()
-                .Property(m => m.Name)
-                .HasMaxLength(200)
-                .IsRequired();
-                
-             //Prescription -> Appointment (many-to-one)
-             modelBuilder.Entity<Prescription>()
-                 .HasOne(p => p.Appointment)
-                 .WithMany(a => a.Prescriptions)
-                 .HasForeignKey(p => p.Appointment.AppointmentId)
-                 .OnDelete(DeleteBehavior.Restrict);
-            
-            /*// Appointment -> Patient (many-to-one)
-            modelBuilder.Entity<Appointment>()
-                .HasOne(a => a.Patient)
-                .WithMany(p => p.Appointments)
-                .HasForeignKey(a => a.PatientId)
-                .OnDelete(DeleteBehavior.Cascade);*/
-            
-            // Appointment -> Doctor (many-to-one)
-            modelBuilder.Entity<Appointment>()
-                .HasOne(a => a.Doctor)
-                .WithMany(d => d.Appointments)
-                .HasForeignKey(a => a.DoctorId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .HasForeignKey(pm => pm.MedicineId);
             
             // Seed data
             modelBuilder.Entity<Appointment>().HasData(seed.Appointments);
